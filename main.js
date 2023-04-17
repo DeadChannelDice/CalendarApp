@@ -1,3 +1,6 @@
+ const STORYBLOK_URL = "https://api-us.storyblok.com/v2/cdn/stories/?starts_with=events/&token=6ayrPOcPuJU8puAP8sIWywtt";
+
+ 
  const calendar = document.querySelector('#calendar');
  const monthElement = document.querySelector('#month');
 
@@ -18,9 +21,25 @@
 
  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 
+ let events;
+
  const today = new Date();
  let currentMonth = today.getMonth();
  let currentYear = today.getFullYear();
+
+ const loadEvents = async () => {
+    const res = await fetch(STORYBLOK_URL);
+    const data = await res.json();
+    const stories = data.stories;
+    events = stories.reduce((accumulator, story) => {
+        const storyTime = new Date(story.content.time);
+        const storyDate = new Date(storyTime.toDateString());
+        accumulator[storyDate] = story.content;
+        return accumulator;
+    }, {});
+ };
+
+ loadEvents();
 
 const drawBlankCalendar = () => {
     for(let i = 0; i < 42; i++) {
@@ -47,48 +66,71 @@ const drawBlankCalendar = () => {
 }
 
 const updateCalendar = (month, year, events) => {
-    const dayElements = document.querySelectorAll('.day');
-
     let theFirst = new Date();
     theFirst.setDate(1);
     theFirst.setMonth(month);
     theFirst.setFullYear(year);
 
-    const theFirstDayOfWeek = theFirst.getDay();
     const monthName = months[month];
     const monthWithYear = `${year} - ${monthName}`;
     monthElement.innerText = monthWithYear;
+
+    // Asigning days dates and adding events
+    const dayElements = document.querySelectorAll('.day');
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
+    const theFirstDayOfWeek = theFirst.getDay();
+
 
     let dayCounter = 1;
 
-    for(let i = 0; i < dayElements.length; i++) {
-        const day = dayElements[i];
-        
-        const dayNumber = day.querySelector('.day-number');
-        if( i >= theFirstDayOfWeek && dayCounter <= daysInMonth) {
-            dayNumber.innerText = dayCounter;
-            dayCounter++;
-        } else {
-            dayNumber.innerText = '';
-        }
-    }
+  for (let i = 0; i < dayElements.length; i++) {
+    const day = dayElements[i];
+    const eventName = day.querySelector('.event-name')
+    eventName.innerText = '';
 
-    console.log(theFirst);
+    const dayNumber = day.querySelector('.day-number');
+    if (i >= theFirstDayOfWeek && dayCounter <= daysInMonth) {
+      const thisDate = new Date(year, month, dayCounter);
+
+      if (events[thisDate]) {
+        const event = events[thisDate];
+        eventName.innerText = `* ${event.title}`;
+      } else {
+        eventName.innerText = ``;
+      }
+
+      dayNumber.innerText = dayCounter;
+      dayCounter++;
+    } else {
+      dayNumber.innerText = '';
+    }
+  }
 }
+
 
 const previousMonth = () => {
     currentMonth--;
-    updateCalendar(currentMonth, currentYear);
+    if (currentMonth < 0) {
+        currentYear--,
+        currentMonth = 11;
+    }
+    updateCalendar(currentMonth, currentYear, events);
 }
 
 const nextMonth = () => {
     currentMonth++;
-    updateCalendar(currentMonth, currentYear);
+    if (currentMonth > 11) {
+        currentYear++,
+        currentMonth = 0;
+    }
+    updateCalendar(currentMonth, currentYear, events);
 }
 
-drawBlankCalendar();
+const load = async () => {
+    await loadEvents();
+    drawBlankCalendar();
+    updateCalendar(currentMonth, currentYear, events);   
+      
+}
 
-updateCalendar(currentMonth, currentYear);
-
+load();
