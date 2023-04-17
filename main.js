@@ -23,7 +23,7 @@
  let currentYear = today.getFullYear();
 
 const drawBlankCalendar = () => {
-    for(let i = 0; i < 35; i++) {
+    for(let i = 0; i < 42; i++) {
         const day = document.createElement('div');
         day.classList.add('day');
         
@@ -50,6 +50,7 @@ const updateCalendar = (month, year, events) => {
     const dayElements = document.querySelectorAll('.day');
 
     let theFirst = new Date();
+    theFirst.setDate(1);
     theFirst.setMonth(month);
     theFirst.setFullYear(year);
 
