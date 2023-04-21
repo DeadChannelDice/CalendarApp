@@ -19,7 +19,14 @@
     'December'
  ];
 
- const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+ const days = [
+  'Sun',
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thu',
+  'Fri',
+  'Sat']
 
  let events;
 
@@ -27,22 +34,22 @@
  let currentMonth = today.getMonth();
  let currentYear = today.getFullYear();
 
- const loadEvents = async () => {
-    const res = await fetch(STORYBLOK_URL);
-    const data = await res.json();
-    const stories = data.stories;
-    events = stories.reduce((accumulator, story) => {
-        const storyTime = new Date(story.content.time);
-        const storyDate = new Date(storyTime.toDateString());
-        accumulator[storyDate] = story.content;
-        return accumulator;
-    }, {});
- };
+//  const loadEvents = async () => {
+//     const res = await fetch(STORYBLOK_URL);
+//     const data = await res.json();
+//     const stories = data.stories;
+//     events = stories.reduce((accumulator, story) => {
+//         const storyTime = new Date(story.content.time);
+//         const storyDate = new Date(storyTime.toDateString());
+//         accumulator[storyDate] = story.content;
+//         return accumulator;
+//     }, {});
+//  };
 
- loadEvents();
+//  loadEvents();
 
 const drawBlankCalendar = () => {
-    for(let i = 0; i < 42; i++) {
+    for(let i = 0; i < 371; i++) {
         const day = document.createElement('div');
         day.classList.add('day');
         
@@ -68,7 +75,7 @@ const drawBlankCalendar = () => {
 const updateCalendar = (month, year, events) => {
     let theFirst = new Date();
     theFirst.setDate(1);
-    theFirst.setMonth(month);
+    theFirst.setMonth(0);
     theFirst.setFullYear(year);
 
     const monthName = months[month];
@@ -76,35 +83,47 @@ const updateCalendar = (month, year, events) => {
     monthElement.innerText = monthWithYear;
 
     // Asigning days dates and adding events
-    const dayElements = document.querySelectorAll('.day');
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    
+
+    const daysInJan = new Date(year, 0 + 1, 0).getDate();
+    const daysInFeb = new Date(year, 1 + 1, 0).getDate();
+    const daysInMar = new Date(year, 2 + 1, 0).getDate();
+    const daysInApr = new Date(year, 3 + 1, 0).getDate();
+    const daysInMay = new Date(year, 4 + 1, 0).getDate();
+    const daysInJun = new Date(year, 5 + 1, 0).getDate();
+    const daysInJul = new Date(year, 6 + 1, 0).getDate();
+    const daysInAug = new Date(year, 7 + 1, 0).getDate();
+    const daysInSep = new Date(year, 8 + 1, 0).getDate();
+    const daysInOct = new Date(year, 9 + 1, 0).getDate();
+    const daysInNov = new Date(year, 10 + 1, 0).getDate();
+    const daysInDec = new Date(year, 11 + 1, 0).getDate();
+
+    const daysInMonth = [daysInJan, daysInFeb, daysInMar, daysInApr, daysInMay, daysInJun, daysInJul, daysInAug, daysInSep, daysInOct, daysInNov, daysInDec]; 
+
+
     const theFirstDayOfWeek = theFirst.getDay();
 
-
     let dayCounter = 1;
+    let monthCounter = 0;
 
-  for (let i = 0; i < dayElements.length; i++) {
-    const day = dayElements[i];
-    const eventName = day.querySelector('.event-name')
-    eventName.innerText = '';
-
+    const daysInYear = [...document.querySelectorAll('.day')];
+    
+  daysInYear.forEach((day) => {
     const dayNumber = day.querySelector('.day-number');
-    if (i >= theFirstDayOfWeek && dayCounter <= daysInMonth) {
-      const thisDate = new Date(year, month, dayCounter);
-
-      if (events[thisDate]) {
-        const event = events[thisDate];
-        eventName.innerText = `* ${event.title}`;
-      } else {
-        eventName.innerText = ``;
-      }
-
+    
+    if (dayCounter <= daysInMonth[monthCounter]) {
       dayNumber.innerText = dayCounter;
       dayCounter++;
+      console.log(daysInMonth[monthCounter]);
     } else {
-      dayNumber.innerText = '';
+      dayCounter = 1;
+      dayNumber.innerText = dayCounter;
+      dayCounter++;
+      monthCounter++;
+      
     }
-  }
+    
+  });
 }
 
 
@@ -127,9 +146,9 @@ const nextMonth = () => {
 }
 
 const load = async () => {
-    await loadEvents();
+    // await loadEvents();
     drawBlankCalendar();
-    updateCalendar(currentMonth, currentYear, events);   
+    updateCalendar(0, currentYear, events);   
       
 }
 
