@@ -19,7 +19,14 @@
     'December'
  ];
 
- const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+ const days = [
+  'Sun',
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thu',
+  'Fri',
+  'Sat']
 
  let events;
 
@@ -76,7 +83,7 @@ const updateCalendar = (month, year, events) => {
     monthElement.innerText = monthWithYear;
 
     // Asigning days dates and adding events
-    const dayElements = document.querySelectorAll('.day');
+    
 
     const daysInJan = new Date(year, 0 + 1, 0).getDate();
     const daysInFeb = new Date(year, 1 + 1, 0).getDate();
@@ -95,10 +102,6 @@ const updateCalendar = (month, year, events) => {
 
 
     const theFirstDayOfWeek = theFirst.getDay();
-
-
-      // I need this to cycle through the #of days and if the dayCount > days in the current month jump to the next month. 
-
 
     let dayCounter = 1;
     let monthCounter = 0;
