@@ -76,6 +76,7 @@ button.navigation:hover {
     display: grid;
     grid-template-columns: repeat(7, 150px);
     gap: 3px;
+    
 }
 
 .day {
@@ -101,6 +102,9 @@ button.navigation:hover {
 
 #container {
     display: flex;
+    height: 1000px;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 #monthNames {
