@@ -106,14 +106,25 @@ button.navigation:hover {
 #monthNames {
     display: flex;
     flex-direction: column;
-    gap: 600px;
-    border: solid red 1px;
+    gap: 16px;
+}
+
+.monthNameContainer {
+  background-color: #A9ABF7;
+  width: 75px;
+  height: 675px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 8px;
+  border-radius: 3px;
 }
 
 .monthName {
-    background-color: black;
-    width: 275px;
-    height: 75px;
-    border: solid red 1px;
+    background-color: none;
+    font-weight: 900;
+    font-size: 42px;
     transform: rotate(-90deg);
 }
+
